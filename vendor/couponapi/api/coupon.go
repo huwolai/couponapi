@@ -5,7 +5,7 @@ import (
 	"couponapi/service"
 	"gitlab.qiyunxin.com/tangtao/utils/security"
 	. "couponapi/constant"
-	"github.com/Azure/azure-sdk-for-go/core/http"
+	"net/http"
 )
 
 func CouponAmount(c *gin.Context)  {
