@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS coupon_user(
   remark VARCHAR(1000) DEFAULT '' COMMENT '优惠券备注',
   amount NUMERIC(10,2) COMMENT '优惠券金额',
   balance NUMERIC(10,2) COMMENT '余额',
+  flag VARCHAR(100) COMMENT '标识 ACCOUNT_RECHARGE',
   is_one int COMMENT '是否只能使用一次 0.否 1.是',
   use_status int COMMENT '使用状态 0.未激活 1.未使用或未使用完 2.已使用',
   create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

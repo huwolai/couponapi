@@ -8,9 +8,38 @@ import (
 	"gitlab.qiyunxin.com/tangtao/utils/log"
 )
 
+type CouponUser struct  {
+	//优惠代码
+	CouponCode string
+	//优惠凭证
+	CouponToken string
+	//优惠金额
+	CouponAmount float64
+	//订单号
+	OrderNo string
+	//appid
+	AppId string
+}
+
+const FLAG_ACCOUNT_RECHARGE  = "ACCOUNT_RECHARGE"
+
+//充值获取优惠券
 func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string) error  {
 
 	couponUser :=dao.NewCouponUser()
+
+	couponUsers ,err :=couponUser.WithCodesOrFlag(openId,nil,FLAG_ACCOUNT_RECHARGE,appId)
+	if err!=nil{
+		return err
+	}
+
+	//如果存在此优惠券信息 那么将钱充值到此券中
+	if couponUsers!=nil&&len(couponUsers)>0{
+		cpuser :=couponUsers[0]
+		err = couponUser.UpdateAmountAndBalanceWithId(cpuser.Amount+amount,cpuser.Balance+amount,cpuser.Id)
+		return err
+	}
+
 	couponUser.Amount = amount
 	couponUser.OpenId = openId
 	couponUser.CouponCode = util.GenerUUId()
@@ -21,7 +50,7 @@ func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string)
 	couponUser.UseStatus = 1
 	couponUser.AppId = appId
 	tx,_ :=db.NewSession().Begin()
-	err :=couponUser.InsertTx(tx)
+	err =couponUser.InsertTx(tx)
 	if err!=nil{
 		log.Error(err)
 		tx.Rollback()
@@ -50,4 +79,31 @@ func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string)
 func CouponAmount(openId string,appId string) (float64,error)  {
 
 	return dao.NewCouponUser().TotalAmountWithOpenId(openId,appId)
+}
+
+func CouponDistribute(openId string,orderNo string,flag string,codes []string,appId string) ([]*CouponUser,error) {
+
+	couponuser :=dao.NewCouponUser()
+	couponuserList,err :=couponuser.WithCodesOrFlag(openId,codes,flag,appId)
+	if err!=nil{
+		log.Error(err)
+		return nil,err
+	}
+	if couponuserList==nil||len(couponuserList)<=0 {
+		return nil,nil
+	}
+	orderDetail,err := GetOrderDetail(orderNo,appId)
+	if err!=nil{
+		log.Error(err)
+		return nil,err
+	}
+	//目前暂时只支持一种优惠使用 不支持多种优惠同时使用
+	couponuser = couponuserList[0]
+
+	result :=&CouponUser{}
+	result.AppId = appId
+	result.CouponAmount = orderDetail.RealPrice
+	result.CouponCode = couponuser.CouponCode
+
+	return nil,nil
 }

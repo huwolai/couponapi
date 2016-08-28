@@ -3,6 +3,10 @@
   "mysql_password":"123456",
   "mysql_user":"qiyunxin",
   "mysql_db":"sampledb",
-  "amqp_url":"amqp://guest:guest@rabbitmq-service.databases.svc.cluster.local:5672/"
-
+  "amqp_url":"amqp://guest:guest@rabbitmq-service.databases.svc.cluster.local:5672/",
+  "publickey_path": "config/couponkeys/rsa_public_key.pem",
+  "privatekey_path": "config/couponkeys/rsa_private_key.pem",
+  "shopapi_url": "http://shopapi.qiyunxin.svc.cluster.local:8080/v1",
+  "shopapi_appid": "shopapi",
+  "shopapi_appkey": ""
 }
