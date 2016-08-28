@@ -55,7 +55,11 @@ func (self *CouponUser) UpdateAmountAndBalanceWithId(amount float64,balance floa
 }
 
 func (self *CouponUser) TotalAmountWithOpenId(openId string,appId string) (float64,error)  {
-	var amount float64
+	var amount *float64
 	err :=db.NewSession().Select("sum(balance)").From("coupon_user").Where("open_id=?",openId).Where("app_id=?",appId).LoadValue(&amount)
-	return amount,err
+	if amount==nil{
+		return 0,nil
+	}
+
+	return *amount,err
 }
