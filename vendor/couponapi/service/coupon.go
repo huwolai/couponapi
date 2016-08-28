@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"gitlab.qiyunxin.com/tangtao/utils/db"
 	"gitlab.qiyunxin.com/tangtao/utils/log"
+	"couponapi/comm"
 )
 
 type CouponUser struct  {
@@ -15,8 +16,10 @@ type CouponUser struct  {
 	CouponToken string
 	//优惠金额
 	CouponAmount float64
+	TrackCode string
 	//订单号
 	OrderNo string
+	OpenId string
 	//appid
 	AppId string
 }
@@ -46,7 +49,7 @@ func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string)
 	couponUser.Balance = amount
 	couponUser.IsOne = 0
 	couponUser.Title="冲多少送多少活动"
-	couponUser.Remark=fmt.Sprintf("冲%f送%f",amount,amount)
+	couponUser.Remark=fmt.Sprintf("冲%.2f送%.2f",amount,amount)
 	couponUser.UseStatus = 1
 	couponUser.AppId = appId
 	tx,_ :=db.NewSession().Begin()
@@ -81,7 +84,7 @@ func CouponAmount(openId string,appId string) (float64,error)  {
 	return dao.NewCouponUser().TotalAmountWithOpenId(openId,appId)
 }
 
-func CouponDistribute(openId string,orderNo string,flag string,codes []string,appId string) ([]*CouponUser,error) {
+func CouponDistribute(openId string,orderNo string,flag string,codes []string,appId string) (*CouponUser,error) {
 
 	couponuser :=dao.NewCouponUser()
 	couponuserList,err :=couponuser.WithCodesOrFlag(openId,codes,flag,appId)
@@ -100,10 +103,41 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 	//目前暂时只支持一种优惠使用 不支持多种优惠同时使用
 	couponuser = couponuserList[0]
 
+	trackCode :=util.GenerUUId()
 	result :=&CouponUser{}
 	result.AppId = appId
-	result.CouponAmount = orderDetail.RealPrice
+	result.OpenId = openId
+	result.CouponAmount = orderDetail.RealPrice/2.0
 	result.CouponCode = couponuser.CouponCode
+	result.OrderNo = orderDetail.No
+	result.TrackCode = trackCode
+	jwtauth := comm.InitJWTAuthenticationBackend()
+	token,err :=jwtauth.GenerateCouponToken(openId,result.CouponCode,trackCode,result.OrderNo,result.CouponAmount,appId)
+	if err!=nil{
+		log.Error(err)
+		return nil,err
+	}
+	result.CouponToken = token
 
-	return nil,nil
+	tx,_ := db.NewSession().Begin()
+	couponTrack := dao.NewCouponTrack()
+	couponTrack.OpenId = result.OpenId
+	couponTrack.CouponAmount = result.CouponAmount
+	couponTrack.Amount = orderDetail.RealPrice
+	couponTrack.Title=couponuser.Title
+	couponTrack.Remark = couponuser.Remark
+	couponTrack.CouponCode = result.CouponCode
+	couponTrack.Status = 0
+	couponTrack.TrackType = 1
+	couponTrack.TrackCode = trackCode
+	couponTrack.TradeNo = orderNo
+	err =couponTrack.InsertTx(tx)
+	if err!=nil{
+		log.Error(err)
+		tx.Rollback()
+		return nil,err
+	}
+	tx.Commit()
+
+	return result,nil
 }

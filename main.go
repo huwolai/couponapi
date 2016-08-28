@@ -73,6 +73,8 @@ func main() {
 		coupon :=v1.Group("/coupon")
 		{	//获取用户优惠券总金额
 			coupon.GET("/:open_id/amount",api.CouponAmount)
+			//获取用户的优惠凭证
+			coupon.GET("/:open_id/order/:order_no/tokens",api.CouponDistribute)
 		}
 
 	}

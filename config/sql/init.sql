@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS coupon_track(
   amount NUMERIC(14,2)  COMMENT '实际价格',
   track_type int COMMENT '记录类型 1. 券使用 2.券生成',
   coupon_amount NUMERIC(10,2) COMMENT '优惠掉的金额',
+  status int COMMENT '0.待使用 1.已使用',
   create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间戳',
   KEY open_id (open_id),

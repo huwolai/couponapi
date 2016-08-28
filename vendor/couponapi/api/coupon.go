@@ -7,21 +7,22 @@ import (
 	. "couponapi/constant"
 	"net/http"
 	"strings"
-	"couponapi/dao"
 	"gitlab.qiyunxin.com/tangtao/utils/log"
 )
 
-type CouponUserDto struct  {
-	Id int64 `json:"id"`
-	OpenId string `json:"open_id"`
+type CouponUser struct  {
+	//优惠代码
 	CouponCode string `json:"coupon_code"`
-	Title string `json:"title"`
-	Remark string `json:"remark"`
-	Amount float64 `json:"amount"`
-	Balance float64 `json:"balance"`
+	//优惠凭证
 	CouponToken string `json:"coupon_token"`
-	IsOne int `json:"is_one"`
-	UseStatus int `json:"use_status"`
+	//优惠金额
+	CouponAmount float64 `json:"coupon_amount"`
+	TrackCode string `json:"track_code"`
+	//订单号
+	OrderNo string `json:"order_no"`
+	OpenId string `json:"open_id"`
+	//appid
+	AppId string `json:"app_id"`
 }
 
 //用户优惠券总金额
@@ -57,29 +58,27 @@ func CouponDistribute(c *gin.Context)  {
 		couponcodeArray = strings.Split(couponcodes,",")
 	}
 	appId :=security.GetAppId2(c.Request)
-	couponusers,err := service.CouponDistribute(openId,orderNo,flag,couponcodeArray,appId)
+	couponuser,err := service.CouponDistribute(openId,orderNo,flag,couponcodeArray,appId)
 	if err!=nil{
 		ResponseError400(c.Writer,10001)
 		return
 	}
-
-
-	if couponusers!=nil{
-
+	couponusers :=make([]*CouponUser,0)
+	if couponuser!=nil{
+		couponusers = append(couponusers,CouponUserToDto(couponuser))
 	}
+	c.JSON(http.StatusOK,couponusers)
 }
 
-func CouponUserToDto(model *dao.CouponUser) *CouponUserDto  {
-	dto := &CouponUserDto{}
-	dto.Id = model.Id
-	dto.Amount = model.Amount
-	dto.Balance = model.Balance
+func CouponUserToDto(model *service.CouponUser) *CouponUser  {
+	dto := &CouponUser{}
 	dto.CouponCode = model.CouponCode
-	dto.IsOne = model.IsOne
 	dto.OpenId = model.OpenId
-	dto.Title = model.Title
-	dto.Remark = model.Remark
-	dto.UseStatus = model.UseStatus
+	dto.TrackCode = model.TrackCode
+	dto.AppId = model.AppId
+	dto.CouponAmount = model.CouponAmount
+	dto.CouponToken = model.CouponToken
+	dto.OrderNo = model.OrderNo
 
 	return dto
 }
