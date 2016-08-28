@@ -30,7 +30,6 @@ func main() {
 		os.Setenv("GO_ENV","tests")
 		os.Setenv("APP_ID","shopapi")
 	}
-
 	err :=config.Init(false)
 	util.CheckErr(err)
 	err = startup.InitDBData()
@@ -47,6 +46,10 @@ func main() {
 
 	v1 := router.Group("/v1")
 	{
+		coupons :=v1.Group("/coupons")
+		{
+			coupons.POST("/distribute")
+		}
 
 	}
 
