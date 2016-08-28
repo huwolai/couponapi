@@ -8,7 +8,7 @@ import (
 	"gitlab.qiyunxin.com/tangtao/utils/util"
 	"gitlab.qiyunxin.com/tangtao/utils/queue"
 	"github.com/streadway/amqp"
-	"FishChatServer/log"
+	"gitlab.qiyunxin.com/tangtao/utils/log"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
