@@ -56,10 +56,13 @@ func main() {
 		if accountEvent.EventKey=="ACCOUNT_RECHARGE" {
 
 		}
-		err :=service.RechargeCoupon(accountEvent.Content.OpenId,accountEvent.Content.SubTradeNo,float64(accountEvent.Content.ChangeAmount)/100,accountEvent.Content.AppId)
-		if err!=nil{
-			log.Error(err)
+		if accountEvent.Content!=nil{
+			err :=service.RechargeCoupon(accountEvent.Content.OpenId,accountEvent.Content.SubTradeNo,float64(accountEvent.Content.ChangeAmount)/100,accountEvent.Content.AppId)
+			if err!=nil{
+				log.Error(err)
+			}
 		}
+
 	})
 
 	v1 := router.Group("/v1")
