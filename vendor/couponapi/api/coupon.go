@@ -60,7 +60,8 @@ func CouponDistribute(c *gin.Context)  {
 	appId :=security.GetAppId2(c.Request)
 	couponuser,err := service.CouponDistribute(openId,orderNo,flag,couponcodeArray,appId)
 	if err!=nil{
-		ResponseError400(c.Writer,10001)
+		log.Error(err)
+		ResponseError400(c.Writer,10009)
 		return
 	}
 	couponusers :=make([]*CouponUser,0)

@@ -73,6 +73,7 @@ func GetOrderDetail(orderNo string,openId string) (*OrderDetailDto,error)  {
 		var  dto *OrderDetailDto
 		err :=util.ReadJsonByByte(data,&dto)
 		if err!=nil{
+			log.Error(string(data))
 			log.Error(err)
 			return nil,err
 		}
