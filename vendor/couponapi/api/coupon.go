@@ -38,7 +38,7 @@ func CouponAmount(c *gin.Context)  {
 	}
 
 	c.JSON(http.StatusOK,gin.H{
-		"amount":int64(amount*1000),
+		"amount":int64(amount*100),
 		"open_id":openId,
 	})
 }
