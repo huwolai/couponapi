@@ -77,6 +77,9 @@ func GetOrderDetail(orderNo string,openId string) (*OrderDetailDto,error)  {
 			log.Error(err)
 			return nil,err
 		}
+		if dto!=nil&&dto.No==""{
+			return nil,nil
+		}
 		return dto,err
 	}
 

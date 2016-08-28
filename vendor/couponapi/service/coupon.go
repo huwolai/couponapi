@@ -7,6 +7,7 @@ import (
 	"gitlab.qiyunxin.com/tangtao/utils/db"
 	"gitlab.qiyunxin.com/tangtao/utils/log"
 	"couponapi/comm"
+	"errors"
 )
 
 type CouponUser struct  {
@@ -99,6 +100,10 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 	if err!=nil{
 		log.Error(err)
 		return nil,err
+	}
+	if orderDetail==nil{
+
+		return nil,errors.New("订单信息没找到!")
 	}
 	//目前暂时只支持一种优惠使用 不支持多种优惠同时使用
 	couponuser = couponuserList[0]
