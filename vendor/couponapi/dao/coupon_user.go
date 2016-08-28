@@ -5,6 +5,7 @@ import (
 	"gitlab.qiyunxin.com/tangtao/utils/db"
 	"strings"
 	"strconv"
+	"gitlab.qiyunxin.com/tangtao/utils/log"
 )
 
 type CouponUser struct  {
@@ -56,12 +57,12 @@ func (self *CouponUser) UpdateAmountAndBalanceWithId(amount float64,balance floa
 }
 
 func (self *CouponUser) TotalAmountWithOpenId(openId string,appId string) (float64,error)  {
-	var amount *string
+	var amount interface{}
 	err :=db.NewSession().Select("sum(balance)").From("coupon_user").Where("open_id=?",openId).Where("app_id=?",appId).LoadValue(&amount)
 	if amount==nil{
 		return 0,nil
 	}
-
-	famount,_ :=strconv.ParseFloat(*amount,10)
+	log.Error(amount)
+	famount,_ :=strconv.ParseFloat(amount.(string),10)
 	return famount,err
 }
