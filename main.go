@@ -56,6 +56,7 @@ func main() {
 		if accountEvent.EventKey=="ACCOUNT_RECHARGE" {
 
 		}
+		log.Error(accountEvent.EventKey,accountEvent.EventName,"content --",accountEvent.Content)
 		if accountEvent.Content!=nil{
 			err :=service.RechargeCoupon(accountEvent.Content.OpenId,accountEvent.Content.SubTradeNo,float64(accountEvent.Content.ChangeAmount)/100,accountEvent.Content.AppId)
 			if err!=nil{

@@ -12,15 +12,14 @@ CREATE TABLE IF NOT EXISTS coupon(
   is_one int COMMENT '是否只能使用一次 0.否 1.是',
   status int COMMENT '优惠券状态 1.正常 0.禁止',
   create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间戳',
-  KEY open_id (open_id)
+  update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间戳'
 ) CHARACTER SET utf8mb4;
 
 -- 用户领取的优惠券
 CREATE TABLE IF NOT EXISTS coupon_user(
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   app_id VARCHAR(255) DEFAULT '' COMMENT 'appID',
-  open_id VARCHAR(255) DEFAULT '' COMMENT '用户ID',
+  open_id VARCHAR(100) DEFAULT '' COMMENT '用户ID',
   sub_trade_no VARCHAR(100) COMMENT '交易号',
   coupon_code VARCHAR(100) DEFAULT '' COMMENT '券唯一代号',
   title VARCHAR(100) DEFAULT '' COMMENT '优惠券标题',
@@ -42,7 +41,7 @@ CREATE TABLE IF NOT EXISTS coupon_track(
   trade_no VARCHAR(100) COMMENT '交易号',
   trade_type int COMMENT '交易类型',
   track_code VARCHAR(100) DEFAULT '' COMMENT '追踪编号',
-  open_id VARCHAR(255) DEFAULT '' COMMENT '用户ID',
+  open_id VARCHAR(100) DEFAULT '' COMMENT '用户ID',
   coupon_code VARCHAR(100) DEFAULT '' COMMENT '第三方券代号',
   title VARCHAR(100) COMMENT '标题',
   remark VARCHAR(255) COMMENT '备注',
