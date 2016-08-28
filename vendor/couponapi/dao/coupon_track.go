@@ -16,6 +16,11 @@ type CouponTrack struct  {
 	CouponAmount float64
 }
 
+func NewCouponTrack() *CouponTrack  {
+
+	return &CouponTrack{}
+}
+
 func (self *CouponTrack) InsertTx(tx *dbr.Tx) error  {
 
 	_,err :=tx.InsertInto("coupon_track").Columns("trade_no","trade_type","track_code","open_id","coupon_code","title","remark","amount","track_type","coupon_amount").Record(self).Exec()

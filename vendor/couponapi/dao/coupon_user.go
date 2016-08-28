@@ -15,6 +15,11 @@ type CouponUser struct  {
 	UseStatus int
 }
 
+func NewCouponUser() *CouponUser  {
+
+	return &CouponUser{}
+}
+
 func (self *CouponUser) InsertTx(tx *dbr.Tx) error  {
 
 	_,err :=tx.InsertInto("coupon_user").Columns("app_id","open_id","coupon_code","title","remark","amount","balance","is_one","use_status").Exec()

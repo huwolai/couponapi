@@ -9,6 +9,7 @@ import (
 	"gitlab.qiyunxin.com/tangtao/utils/queue"
 	"github.com/streadway/amqp"
 	"gitlab.qiyunxin.com/tangtao/utils/log"
+	"couponapi/service"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -51,6 +52,14 @@ func main() {
 
 	queue.ConsumeAccountEvent("couponapi_account_consumer", func(accountEvent *queue.AccountEvent, dv amqp.Delivery) {
 		log.Error("couponapi_account_consumer----change")
+		//账户充值
+		if accountEvent.EventKey=="ACCOUNT_RECHARGE" {
+
+		}
+		err :=service.RechargeCoupon(accountEvent.Content.OpenId,accountEvent.Content.SubTradeNo,float64(accountEvent.Content.ChangeAmount)/100,accountEvent.Content.AppId)
+		if err!=nil{
+			log.Error(err)
+		}
 	})
 
 	v1 := router.Group("/v1")
