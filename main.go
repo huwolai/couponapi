@@ -6,6 +6,9 @@ import (
 	"gitlab.qiyunxin.com/tangtao/utils/startup"
 	"gitlab.qiyunxin.com/tangtao/utils/config"
 	"gitlab.qiyunxin.com/tangtao/utils/util"
+	"gitlab.qiyunxin.com/tangtao/utils/queue"
+	"github.com/streadway/amqp"
+	"FishChatServer/log"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -43,6 +46,12 @@ func main() {
 	}
 	router := gin.Default()
 	router.Use(CORSMiddleware())
+
+	queue.SetupAMQP(config.GetValue("amqp_url").ToString())
+
+	queue.ConsumeAccountEvent("couponapi_account_consumer", func(accountEvent *queue.AccountEvent, dv amqp.Delivery) {
+		log.Error("couponapi_account_consumer----change")
+	})
 
 	v1 := router.Group("/v1")
 	{
