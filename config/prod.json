@@ -3,14 +3,10 @@
   "mysql_password":"123456",
   "mysql_user":"qiyunxin",
   "mysql_db":"sampledb",
-  //优惠券凭证过期时间 (单位 分)
   "coupon_token_expiration": "5",
   "amqp_url":"amqp://guest:guest@rabbitmq-service.databases.svc.cluster.local:5672/",
-  //优惠券RSA公钥
   "publickey_path": "config/couponkeys/rsa_public_key.pem",
-  //优惠券私钥 (优惠券凭证由此证书签发)
   "privatekey_path": "config/couponkeys/rsa_private_key.pem",
-  //shopapi基地址
   "shopapi_url": "http://shopapi.qiyunxin.svc.cluster.local:8080/v1",
   //shopapi的APPID
   "shopapi_appid": "shopapi",
