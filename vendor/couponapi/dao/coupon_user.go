@@ -4,8 +4,6 @@ import (
 	"github.com/gocraft/dbr"
 	"gitlab.qiyunxin.com/tangtao/utils/db"
 	"strings"
-	"strconv"
-	"gitlab.qiyunxin.com/tangtao/utils/log"
 )
 
 type CouponUser struct  {
@@ -57,12 +55,8 @@ func (self *CouponUser) UpdateAmountAndBalanceWithId(amount float64,balance floa
 }
 
 func (self *CouponUser) TotalAmountWithOpenId(openId string,appId string) (float64,error)  {
-	var amount []byte
+	var amount dbr.NullFloat64
 	err :=db.NewSession().Select("sum(balance)").From("coupon_user").Where("open_id=?",openId).Where("app_id=?",appId).LoadValue(&amount)
-	if amount==nil{
-		return 0,nil
-	}
-	log.Error(amount)
-	famount,_ :=strconv.ParseFloat(string(amount),10)
-	return famount,err
+
+	return amount.Float64,err
 }
