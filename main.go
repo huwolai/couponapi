@@ -10,6 +10,7 @@ import (
 	"github.com/streadway/amqp"
 	"gitlab.qiyunxin.com/tangtao/utils/log"
 	"couponapi/service"
+	"couponapi/api"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -32,7 +33,7 @@ func main() {
 
 	if os.Getenv("GO_ENV")=="" {
 		os.Setenv("GO_ENV","tests")
-		os.Setenv("APP_ID","shopapi")
+		os.Setenv("APP_ID","couponapi")
 	}
 	err :=config.Init(false)
 	util.CheckErr(err)
@@ -51,19 +52,16 @@ func main() {
 	queue.SetupAMQP(config.GetValue("amqp_url").ToString())
 
 	queue.ConsumeAccountEvent("couponapi_account_consumer", func(accountEvent *queue.AccountEvent, dv amqp.Delivery) {
-		log.Error("couponapi_account_consumer----change")
 		//账户充值
 		if accountEvent.EventKey=="ACCOUNT_RECHARGE" {
-
-		}
-		log.Error(accountEvent.EventKey,accountEvent.EventName,"content --",accountEvent.Content)
-		if accountEvent.Content!=nil{
-			err :=service.RechargeCoupon(accountEvent.Content.OpenId,accountEvent.Content.SubTradeNo,float64(accountEvent.Content.ChangeAmount)/100,accountEvent.Content.AppId)
-			if err!=nil{
-				log.Error(err)
+			if accountEvent.Content!=nil{
+				err :=service.RechargeCoupon(accountEvent.Content.OpenId,accountEvent.Content.SubTradeNo,float64(accountEvent.Content.ChangeAmount)/100,accountEvent.Content.AppId)
+				if err!=nil{
+					log.Error(err)
+				}
+				dv.Ack(false)
 			}
 		}
-
 	})
 
 	v1 := router.Group("/v1")
@@ -72,10 +70,11 @@ func main() {
 		{
 			coupons.POST("/distribute")
 		}
+		coupon :=v1.Group("/coupon")
+		{	//获取用户优惠券总金额
+			coupon.GET("/:open_id/amount",api.CouponAmount)
+		}
 
 	}
-
 	router.Run(":8080")
-
-
 }

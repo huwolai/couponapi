@@ -46,3 +46,8 @@ func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string)
 	tx.Commit()
 	return nil
 }
+
+func CouponAmount(openId string,appId string) (float64,error)  {
+
+	return dao.NewCouponUser().TotalAmountWithOpenId(openId,appId)
+}

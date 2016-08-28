@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS coupon_user(
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   app_id VARCHAR(255) DEFAULT '' COMMENT 'appID',
   open_id VARCHAR(100) DEFAULT '' COMMENT '用户ID',
-  sub_trade_no VARCHAR(100) COMMENT '交易号',
   coupon_code VARCHAR(100) DEFAULT '' COMMENT '券唯一代号',
   title VARCHAR(100) DEFAULT '' COMMENT '优惠券标题',
   remark VARCHAR(1000) DEFAULT '' COMMENT '优惠券备注',
