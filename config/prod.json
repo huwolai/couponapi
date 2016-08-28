@@ -8,7 +8,6 @@
   "publickey_path": "config/couponkeys/rsa_public_key.pem",
   "privatekey_path": "config/couponkeys/rsa_private_key.pem",
   "shopapi_url": "http://shopapi.qiyunxin.svc.cluster.local:8080/v1",
-  //shopapi的APPID
   "shopapi_appid": "shopapi",
   "shopapi_appkey": ""
 }
