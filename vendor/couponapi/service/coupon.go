@@ -116,6 +116,10 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 		return nil,nil
 	}
 
+	if orderDetail.RealPrice<=0.01 {
+		return nil,nil
+	}
+
 	couponAmount := orderDetail.RealPrice/2.0
 	if couponAmount> couponuser.Balance {
 		couponAmount = couponuser.Balance
