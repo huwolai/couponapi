@@ -52,7 +52,7 @@ func (self *CouponUser) WithCodesOrFlag(openId string,codes []string,flag string
 //根据优惠券代码查询用户优惠券
 func (self *CouponUser) WithCouponCode(openId string,code string,appId string) (*CouponUser,error)  {
 	var model *CouponUser
-	_,err :=db.NewSession().Select("*").From("coupon_user").Where("code=?",code).Where("open_id=?",openId).Where("app_id=?",appId).LoadStructs(&model)
+	_,err :=db.NewSession().Select("*").From("coupon_user").Where("coupon_code=?",code).Where("open_id=?",openId).Where("app_id=?",appId).LoadStructs(&model)
 	return model,err
 }
 

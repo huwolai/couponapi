@@ -62,6 +62,8 @@ func main() {
 				}
 				dv.Ack(false)
 			}
+		}else {
+			dv.Ack(false)
 		}
 	})
 
