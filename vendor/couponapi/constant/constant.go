@@ -12,6 +12,15 @@ const (
 	COUPON_STACK_STATUS_USED = 1
 )
 
+const (
+	//未激活
+	COUPON_USER_STATUS_UNACTIVED =0
+	//已激活
+	COUPON_USER_STATUS_ACTIVED = 1
+	//已使用完
+	COUPON_USER_STATUS_USED = 2
+)
+
 var Q func(code int) string
 var strMap map[int]string
 func init()  {

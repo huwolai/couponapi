@@ -9,6 +9,7 @@ import (
 	"couponapi/comm"
 	"errors"
 	"gitlab.qiyunxin.com/tangtao/utils/config"
+	"couponapi/constant"
 )
 
 type CouponUser struct  {
@@ -86,7 +87,7 @@ func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string)
 
 func CouponAmount(openId string,appId string) (float64,error)  {
 
-	return dao.NewCouponUser().TotalAmountWithOpenId(openId,appId)
+	return dao.NewCouponUser().TotalAmountWithOpenId(constant.COUPON_USER_STATUS_ACTIVED,openId,appId)
 }
 
 func CouponDistribute(openId string,orderNo string,flag string,codes []string,appId string) (*CouponUser,error) {

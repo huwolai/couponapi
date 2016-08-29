@@ -69,8 +69,7 @@ func main() {
 	{
 		coupons :=v1.Group("/coupons")
 		{
-			coupons.POST("/distribute")
-			coupons.POST("/callback")
+			coupons.POST("/callback",api.CouponUseCallback)
 		}
 		coupon :=v1.Group("/coupon")
 		{	//获取用户优惠券总金额

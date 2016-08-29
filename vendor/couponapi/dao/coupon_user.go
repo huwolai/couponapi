@@ -71,7 +71,7 @@ func (self *CouponUser) UpdateBalanceWithCouponCodeTx(balance float64,couponCode
 	return err
 }
 
-func (self *CouponUser) TotalAmountWithOpenId(openId string,appId string) (float64,error)  {
+func (self *CouponUser) TotalAmountWithOpenId(status int,openId string,appId string) (float64,error)  {
 	var amount dbr.NullFloat64
 	err :=db.NewSession().Select("sum(balance)").From("coupon_user").Where("open_id=?",openId).Where("app_id=?",appId).LoadValue(&amount)
 
