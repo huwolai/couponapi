@@ -14,6 +14,7 @@ type CouponUser struct  {
 	Title string
 	Remark string
 	Amount float64
+	Flag string
 	Balance float64
 	IsOne int
 	UseStatus int
@@ -26,7 +27,7 @@ func NewCouponUser() *CouponUser  {
 
 func (self *CouponUser) InsertTx(tx *dbr.Tx) error  {
 
-	_,err :=tx.InsertInto("coupon_user").Columns("app_id","open_id","coupon_code","title","remark","amount","balance","is_one","use_status").Record(self).Exec()
+	_,err :=tx.InsertInto("coupon_user").Columns("app_id","open_id","coupon_code","title","remark","amount","balance","is_one","use_status","flag").Record(self).Exec()
 
 	return err
 }
