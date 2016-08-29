@@ -12,6 +12,9 @@ import (
 )
 
 type CouponUser struct  {
+
+	Title string
+	Remark string
 	//优惠代码
 	CouponCode string
 	//优惠凭证
@@ -119,6 +122,8 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 
 	trackCode :=util.GenerUUId()
 	result :=&CouponUser{}
+	result.Title = couponuser.Title
+	result.Remark = couponuser.Remark
 	result.AppId = appId
 	result.OpenId = openId
 	result.CouponAmount = couponAmount
