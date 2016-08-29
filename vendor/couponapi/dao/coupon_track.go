@@ -43,7 +43,7 @@ func (self *CouponTrack) WithTrackCode(trackCode string) (*CouponTrack,error)  {
 
 func (self *CouponTrack) UpdateTradeAndStatusWithTrackCodeTx(status int,tradeType int,tradeNo string,trackCode string,tx *dbr.Tx) error  {
 
-	_,err :=tx.Update("coupon_track").Set("trade_no",tradeNo).Set("trade_type",tradeType).Set("status",status).Where("trade_code=?",trackCode).Exec()
+	_,err :=tx.Update("coupon_track").Set("trade_no",tradeNo).Set("trade_type",tradeType).Set("status",status).Where("trade_no=?",trackCode).Exec()
 
 	return err
 }
