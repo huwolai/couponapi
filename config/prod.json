@@ -9,5 +9,7 @@
   "privatekey_path": "config/couponkeys/rsa_private_key.pem",
   "shopapi_url": "http://shopapi.qiyunxin.svc.cluster.local:8080/v1",
   "shopapi_appid": "shopapi",
-  "shopapi_appkey": ""
+  "shopapi_appkey": "",
+  "coupon_notify_url": "http://couponapi.qiyunxin.svc.cluster.local:8080/v1/coupons/callback"
+
 }

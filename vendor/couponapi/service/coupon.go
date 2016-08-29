@@ -8,6 +8,7 @@ import (
 	"gitlab.qiyunxin.com/tangtao/utils/log"
 	"couponapi/comm"
 	"errors"
+	"gitlab.qiyunxin.com/tangtao/utils/config"
 )
 
 type CouponUser struct  {
@@ -107,17 +108,26 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 	}
 	//目前暂时只支持一种优惠使用 不支持多种优惠同时使用
 	couponuser = couponuserList[0]
+	if couponuser.Balance<=0 {
+		return nil,nil
+	}
+
+	couponAmount := orderDetail.RealPrice/2.0
+	if couponAmount> couponuser.Balance {
+		couponAmount = couponuser.Balance
+	}
 
 	trackCode :=util.GenerUUId()
 	result :=&CouponUser{}
 	result.AppId = appId
 	result.OpenId = openId
-	result.CouponAmount = orderDetail.RealPrice/2.0
+	result.CouponAmount = couponAmount
 	result.CouponCode = couponuser.CouponCode
 	result.OrderNo = orderDetail.No
 	result.TrackCode = trackCode
 	jwtauth := comm.InitJWTAuthenticationBackend()
-	token,err :=jwtauth.GenerateCouponToken(openId,result.CouponCode,trackCode,result.OrderNo,result.CouponAmount,appId)
+	notifyUrl :=config.GetValue("coupon_notify_url").ToString()
+	token,err :=jwtauth.GenerateCouponToken(openId,result.CouponCode,trackCode,result.OrderNo,result.CouponAmount,notifyUrl,appId)
 	if err!=nil{
 		log.Error(err)
 		return nil,err
@@ -127,6 +137,7 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 	tx,_ := db.NewSession().Begin()
 	couponTrack := dao.NewCouponTrack()
 	couponTrack.OpenId = result.OpenId
+	couponTrack.AppId = result.AppId
 	couponTrack.CouponAmount = result.CouponAmount
 	couponTrack.Amount = orderDetail.RealPrice
 	couponTrack.Title=couponuser.Title

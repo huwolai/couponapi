@@ -8,5 +8,6 @@ coupon_no 优惠唯一编号
 coupon_amount 优惠金额
 open_id
 app_id
+order_no 订单号
 
 失效时间

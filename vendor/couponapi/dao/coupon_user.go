@@ -31,6 +31,8 @@ func (self *CouponUser) InsertTx(tx *dbr.Tx) error  {
 	return err
 }
 
+
+
 func (self *CouponUser) WithCodesOrFlag(openId string,codes []string,flag string,appId string) ([]*CouponUser,error)  {
 	var list []*CouponUser
 	if codes!=nil&&len(codes)>0 {
@@ -44,12 +46,26 @@ func (self *CouponUser) WithCodesOrFlag(openId string,codes []string,flag string
 	}
 
 	return nil,nil
-
 }
 
+//根据优惠券代码查询用户优惠券
+func (self *CouponUser) WithCouponCode(openId string,code string,appId string) (*CouponUser,error)  {
+	var model *CouponUser
+	_,err :=db.NewSession().Select("*").From("coupon_user").Where("code=?",code).Where("open_id=?",openId).Where("app_id=?",appId).LoadStructs(&model)
+	return model,err
+}
+
+//更新优惠券面值跟余额
 func (self *CouponUser) UpdateAmountAndBalanceWithId(amount float64,balance float64,id int64) error  {
 
 	_,err :=db.NewSession().Update("coupon_user").Set("amount",amount).Set("balance",balance).Where("id=?",id).Exec()
+
+	return err
+}
+
+func (self *CouponUser) UpdateBalanceWithCouponCodeTx(balance float64,couponCode string,appId string,tx *dbr.Tx) error  {
+
+	_,err :=tx.Update("coupon_user").Set("balance",balance).Where("coupon_code=?",couponCode).Where("app_id=?",appId).Exec()
 
 	return err
 }

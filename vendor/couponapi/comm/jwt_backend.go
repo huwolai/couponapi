@@ -36,7 +36,7 @@ func InitJWTAuthenticationBackend() *JWTAuthenticationBackend {
 }
 
 //生成优惠券凭证
-func (backend *JWTAuthenticationBackend) GenerateCouponToken(openId string,couponCode string,trackCode string,orderNo string,couponAmount float64,appId string) (string, error) {
+func (backend *JWTAuthenticationBackend) GenerateCouponToken(openId string,couponCode string,trackCode string,orderNo string,couponAmount float64,notifyUrl string,appId string) (string, error) {
 	token := jwt.New(jwt.SigningMethodRS256)
 	token.Claims["exp"] = time.Now().Add(time.Minute * time.Duration(config.GetValue("coupon_token_expiration").ToInt())).Unix()
 	token.Claims["iat"] = time.Now().Unix()
@@ -44,6 +44,7 @@ func (backend *JWTAuthenticationBackend) GenerateCouponToken(openId string,coupo
 	token.Claims["track_code"] = trackCode
 	token.Claims["order_no"] = orderNo
 	token.Claims["open_id"] = openId
+	token.Claims["notify_url"] = notifyUrl
 	token.Claims["coupon_amount"] = couponAmount
 	token.Claims["app_id"] = appId
 	tokenString, err := token.SignedString(backend.privateKey)

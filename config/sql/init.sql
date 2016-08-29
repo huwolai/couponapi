@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS coupon_user(
 -- 优惠券追踪
 CREATE TABLE IF NOT EXISTS coupon_track(
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  app_id VARCHAR(255) COMMENT 'app_id',
   trade_no VARCHAR(100) COMMENT '交易号',
   trade_type int COMMENT '交易类型',
   track_code VARCHAR(100) DEFAULT '' COMMENT '追踪编号',
