@@ -7,6 +7,7 @@ import (
 	"errors"
 	"gitlab.qiyunxin.com/tangtao/utils/db"
 	"gitlab.qiyunxin.com/tangtao/utils/util"
+	"gitlab.qiyunxin.com/tangtao/utils/log"
 )
 
 type CouponCallbackDto struct  {
@@ -25,16 +26,19 @@ func CouponUseCallback(c *gin.Context)  {
 	var resultDto *CouponCallbackDto
 	err :=c.BindJSON(&resultDto)
 	if err!=nil{
+		log.Error(err)
 		ResponseError400(c.Writer,10003)
 		return
 	}
 	couponTrack := dao.NewCouponTrack()
 	couponTrack,err = couponTrack.WithTrackCode(resultDto.TrackCode)
 	if err!=nil{
+		log.Error(err)
 		ResponseError400(c.Writer,10001)
 		return
 	}
 	if couponTrack==nil{
+		log.Error("没有找到对应的coupon track")
 		ResponseError400(c.Writer,10010)
 		return
 	}
@@ -45,6 +49,7 @@ func CouponUseCallback(c *gin.Context)  {
 
 	err =CouponInfoUpdate(couponTrack,resultDto)
 	if err!=nil{
+		log.Error(err)
 		ResponseError400(c.Writer,10012)
 		return
 	}
