@@ -59,7 +59,7 @@ func main() {
 				err :=service.RechargeCoupon(accountEvent.Content.OpenId,accountEvent.Content.SubTradeNo,float64(accountEvent.Content.ChangeAmount)/100,accountEvent.Content.AppId)
 				if err!=nil{
 					log.Error(err)
-					return 
+					return
 				}
 				dv.Ack(false)
 			}else{

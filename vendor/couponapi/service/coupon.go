@@ -120,7 +120,7 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 		return nil,nil
 	}
 
-	couponAmount := orderDetail.RealPrice/2.0
+	couponAmount := comm.Round(orderDetail.RealPrice/2.0,2)
 	if couponAmount> couponuser.Balance {
 		couponAmount = couponuser.Balance
 	}
