@@ -64,7 +64,7 @@ func CouponInfoUpdate(couponTrack *dao.CouponTrack,callbackDto *CouponCallbackDt
 		return err
 	}
 
-	couponbalance :=couponuser.Balance - couponTrack.Amount
+	couponbalance :=couponuser.Balance - couponTrack.CouponAmount
 	if couponbalance < 0 {
 
 		return errors.New("优惠券余额不足")
