@@ -45,7 +45,7 @@ type OrderItemDetailDto struct  {
 	//商品cover 封面图 url
 	ProdCoverImg string `json:"prod_coverimg"`
 	ProdTitle string `json:"prod_title"`
-	ProdFlag string `json:"商品标记"`
+	ProdFlag string `json:"prod_flag"`
 	ProdId int64 `json:"prod_id"`
 	Num int `json:"num"`
 	OfferUnitPrice float64 `json:"offer_unit_price"`
