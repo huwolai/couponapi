@@ -120,7 +120,7 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 		return nil,nil
 	}
 
-	couponAmount := comm.Round(orderDetail.RealPrice/2.0,2)
+	couponAmount := getCouponAmount(orderDetail)
 	if couponAmount> couponuser.Balance {
 		couponAmount = couponuser.Balance
 	}
@@ -166,4 +166,19 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 	tx.Commit()
 
 	return result,nil
+}
+
+func getCouponAmount(order *OrderDetailDto) float64  {
+	items := order.Items
+	var totalCouponAmount float64
+	if items!=nil{
+		for _,item :=range items {
+			//只有标记为此商品的才进行优惠
+			if item.ProdFlag=="merchant_default" {
+				totalCouponAmount += comm.Round(item.BuyTotalPrice/2.0,2)
+			}
+		}
+	}
+
+	return totalCouponAmount
 }
