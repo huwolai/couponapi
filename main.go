@@ -53,6 +53,9 @@ func main() {
 
 	queue.ConsumeAccountEvent("couponapi_account_consumer", func(accountEvent *queue.AccountEvent, dv amqp.Delivery) {
 		log.Error("获取到账户金额变化时间",accountEvent.EventKey)
+		log.Error(accountEvent.Content)
+		log.Error(accountEvent.Content.Action)
+		log.Error("--------")
 		//账户充值
 		if accountEvent.EventKey==queue.ACCOUNT_AMOUNT_EVENT_CHANGE {
 			log.Error(accountEvent.Content)
