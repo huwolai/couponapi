@@ -36,7 +36,7 @@ const FLAG_ACCOUNT_RECHARGE  = "ACCOUNT_RECHARGE"
 func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string) error  {
 
 	couponUser :=dao.NewCouponUser()
-
+	// 获取用户优惠券信息
 	couponUsers ,err :=couponUser.WithCodesOrFlag(openId,nil,FLAG_ACCOUNT_RECHARGE,appId)
 	if err!=nil{
 		return err
@@ -59,6 +59,12 @@ func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string)
 	couponUser.UseStatus = 1
 	couponUser.AppId = appId
 	tx,_ :=db.NewSession().Begin()
+	defer func() {
+		if err := recover();err != nil {
+			log.Error(err)
+			tx.Rollback()
+		}
+	}()
 	err =couponUser.InsertTx(tx)
 	if err!=nil{
 		log.Error(err)
@@ -81,15 +87,21 @@ func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string)
 		tx.Rollback()
 		return err
 	}
-	tx.Commit()
+	err =tx.Commit()
+	if err!=nil{
+		log.Error(err)
+		return err
+	}
 	return nil
 }
 
+//获取优惠券金额
 func CouponAmount(openId string,appId string) (float64,error)  {
 
 	return dao.NewCouponUser().TotalAmountWithOpenId(constant.COUPON_USER_STATUS_ACTIVED,openId,appId)
 }
 
+//分发优惠券
 func CouponDistribute(openId string,orderNo string,flag string,codes []string,appId string) (*CouponUser,error) {
 
 	couponuser :=dao.NewCouponUser()
