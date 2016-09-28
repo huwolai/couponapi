@@ -34,7 +34,7 @@ const FLAG_ACCOUNT_RECHARGE  = "ACCOUNT_RECHARGE"
 
 //充值获取优惠券
 func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string) error  {
-
+	log.Error("---RechargeCoupon----")
 	couponUser :=dao.NewCouponUser()
 	// 获取用户优惠券信息
 	couponUsers ,err :=couponUser.WithCodesOrFlag(openId,nil,FLAG_ACCOUNT_RECHARGE,appId)
