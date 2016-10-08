@@ -56,6 +56,7 @@ func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string)
 	couponUser.Title="冲多少送多少活动"
 	couponUser.Remark=fmt.Sprintf("冲%.2f送%.2f",amount,amount)
 	couponUser.UseStatus = 1
+	couponUser.Flag = FLAG_ACCOUNT_RECHARGE
 	couponUser.AppId = appId
 	tx,_ :=db.NewSession().Begin()
 	defer func() {
@@ -72,6 +73,7 @@ func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string)
 	}
 
 	couponTrack := dao.NewCouponTrack()
+	couponTrack.CouponCode = couponUser.CouponCode
 	couponTrack.OpenId = openId
 	couponTrack.Title = couponUser.Title
 	couponTrack.Remark = couponUser.Remark
