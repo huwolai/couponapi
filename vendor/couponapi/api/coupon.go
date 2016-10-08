@@ -58,6 +58,8 @@ func CouponDistribute(c *gin.Context)  {
 		couponcodeArray = strings.Split(couponcodes,",")
 	}
 	appId :=security.GetAppId2(c.Request)
+	log.Info("appId:",appId)
+	log.Info("flag:",flag)
 	couponuser,err := service.CouponDistribute(openId,orderNo,flag,couponcodeArray,appId)
 	if err!=nil{
 		log.Error(err)
