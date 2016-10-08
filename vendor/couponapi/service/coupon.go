@@ -34,8 +34,6 @@ const FLAG_ACCOUNT_RECHARGE  = "ACCOUNT_RECHARGE"
 
 //充值获取优惠券
 func RechargeCoupon(openId string,subTradeNo string,amount float64,appId string) error  {
-	log.Error("---RechargeCoupon----")
-	log.Info("RechargeCoupon===")
 	couponUser :=dao.NewCouponUser()
 	// 获取用户优惠券信息
 	couponUsers ,err :=couponUser.WithCodesOrFlag(openId,nil,FLAG_ACCOUNT_RECHARGE,appId)
@@ -112,6 +110,7 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 		return nil,err
 	}
 	if couponuserList==nil||len(couponuserList)<=0 {
+		log.Info("用户没有优惠券！")
 		return nil,nil
 	}
 	orderDetail,err := GetOrderDetail(orderNo,appId)
@@ -126,10 +125,12 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 	//目前暂时只支持一种优惠使用 不支持多种优惠同时使用
 	couponuser = couponuserList[0]
 	if couponuser.Balance<=0 {
+		log.Info("券余额不足！")
 		return nil,nil
 	}
 
 	if orderDetail.RealPrice<=0.01 {
+		log.Info("商品真实金额小于或等于0.01！")
 		return nil,nil
 	}
 

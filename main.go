@@ -52,14 +52,9 @@ func main() {
 	queue.SetupAMQP(config.GetValue("amqp_url").ToString())
 
 	queue.ConsumeAccountEvent("couponapi_account_consumer", func(accountEvent *queue.AccountEvent, dv amqp.Delivery) {
-		log.Error("获取到账户金额变化时间",accountEvent.EventKey)
-		log.Error(accountEvent.Content)
-		log.Error(accountEvent.Content.Action)
-		log.Error("--------")
+		log.Info("获取到账户金额变化时间",accountEvent.EventKey)
 		//账户充值
 		if accountEvent.EventKey==queue.ACCOUNT_AMOUNT_EVENT_CHANGE {
-			log.Error(accountEvent.Content)
-			log.Error(accountEvent.Content.Action)
 			if accountEvent.Content!=nil&&accountEvent.Content.Action=="ACCOUNT_RECHARGE"{
 				err :=service.RechargeCoupon(accountEvent.Content.OpenId,accountEvent.Content.SubTradeNo,float64(accountEvent.Content.ChangeAmount)/100,accountEvent.Content.AppId)
 				if err!=nil{
