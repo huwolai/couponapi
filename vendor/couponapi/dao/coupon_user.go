@@ -46,7 +46,9 @@ func (self *CouponUser) WithCodesOrFlag(openId string,codes []string,flag string
 		return list,err
 	}
 
-	return nil,nil
+	_,err :=db.NewSession().SelectBySql("select * from coupon_user where open_id=? and app_id=?",openId,appId).LoadStructs(&list)
+	return list,err
+
 }
 
 //根据优惠券代码查询用户优惠券
