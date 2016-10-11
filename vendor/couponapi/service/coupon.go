@@ -137,6 +137,9 @@ func CouponDistribute(openId string,orderNo string,flag string,codes []string,ap
 	}
 
 	couponAmount := getCouponAmount(orderDetail)
+	if couponAmount<=0 {
+		return nil,nil
+	}
 	if couponAmount> couponuser.Balance {
 		couponAmount = couponuser.Balance
 	}
@@ -192,6 +195,24 @@ func getCouponAmount(order *OrderDetailDto) float64  {
 			//只有标记为此商品的才进行优惠
 			if item.ProdFlag=="merchant_default" {
 				totalCouponAmount += comm.Round(item.BuyTotalPrice/2.0,2)
+				continue
+			}
+
+			if item.Json!=""{
+				var resultMap map[string]interface{}
+				err :=util.ReadJsonByByte([]byte(item.Json),&resultMap)
+				if err!=nil{
+					log.Error(err)
+					return 0
+				}
+				if resultMap!=nil{
+					//私人订制
+					if resultMap["goods_type"]!=nil&&resultMap["goods_type"].(string)=="tailor" {
+						totalCouponAmount += comm.Round(item.BuyTotalPrice/2.0,2)
+						continue
+					}
+				}
+
 			}
 		}
 	}
